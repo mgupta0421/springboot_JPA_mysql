@@ -1,5 +1,6 @@
 package net.javaguides.banking_app.controller;
 
+import org.hibernate.mapping.Map;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,5 +33,12 @@ public class AccountController {
         AccountDto accountDto = accountService.getAccountById(id);
         return ResponseEntity.ok(accountDto);
     } 
+
+    @PostMapping
+    public ResponseEntity<AccountDto> deposit(Long id, Map<String, Double> request){
+        AccountDto accountDto = accountService.getAccountById(id);
+        return ResponseEntity.ok(accountDto);
+    } 
     
 }
+ 
