@@ -1,5 +1,8 @@
 package net.javaguides.banking_app.service.impl;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.stereotype.Service;
 
 import net.javaguides.banking_app.dto.AccountDto;
@@ -37,6 +40,33 @@ public class AccountServiceimpl implements AccountService{
         account.setBalance(total);
         Account savedAccount = accountRepository.save(account);
         return AccountMapper.mapToAccountDto(savedAccount);
+    }
+
+    @Override
+    public AccountDto withdraw(Long id, double amount) {
+        Account account = accountRepository.findById(id).orElseThrow(() -> new RuntimeException("Account does not exist"));
+        if(account.getBalance() < amount){
+            throw new RuntimeException("Insufficient amount");
+        }
+        double total = account.getBalance()-amount;
+        account.setBalance((total));
+        Account savvedAccount = accountRepository.save(account);
+        return AccountMapper.mapToAccountDto(savvedAccount);
+    }
+
+    @Override
+    public List<AccountDto> getAllAccounts() {
+        List<Account> accounts = accountRepository.findAll();
+        return accounts.stream().map((account) -> AccountMapper.mapToAccountDto(account))
+        .collect(Collectors.toList());
+
+    }
+
+    @Override
+    public void deleteAccount(Long id) {
+        Account account = accountRepository.findById(id).orElseThrow(() -> new RuntimeException("Account does not exist"));
+        accountRepository.deleteById(id);
+
     }
     
 }

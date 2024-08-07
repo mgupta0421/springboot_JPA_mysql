@@ -1,7 +1,11 @@
 package net.javaguides.banking_app.controller;
 
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -43,12 +47,30 @@ public class AccountController {
         return ResponseEntity.ok(accountDto);
     } 
 
-    @Operation(summary = "Deposite amount in the account")
-    @ApiResponse(responseCode = "200", description = "Amout added to the account")
-    @PostMapping
-    public ResponseEntity<AccountDto> deposit(Long id, double request){
-        AccountDto accountDto = accountService.getAccountById(id);
+    @PostMapping("/{id}/deposit")
+    public ResponseEntity<AccountDto> deposit(@PathVariable Long id, @RequestBody Map<String, Double> request){
+        Double amount = request.get("amount");
+        AccountDto accountDto = accountService.deposit(id, amount);
         return ResponseEntity.ok(accountDto);
+    } 
+
+    @PostMapping("/{id}/withdraw")
+    public ResponseEntity<AccountDto> withdraw(@PathVariable Long id, @RequestBody Map<String, Double> request){
+        Double amount = request.get("amount");
+        AccountDto accountDto = accountService.withdraw(id, amount);
+        return ResponseEntity.ok(accountDto);
+    } 
+
+    @GetMapping()
+    public ResponseEntity<List<AccountDto>> getAllAccounts(){
+        List<AccountDto> accounts = accountService.getAllAccounts();
+        return ResponseEntity.ok(accounts);
+    } 
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteAccount(@PathVariable Long id){
+        accountService.deleteAccount(id);
+        return ResponseEntity.ok("accounts deleted");
     } 
     
 }
