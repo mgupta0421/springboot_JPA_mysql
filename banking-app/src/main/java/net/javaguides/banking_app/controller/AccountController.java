@@ -47,6 +47,8 @@ public class AccountController {
         return ResponseEntity.ok(accountDto);
     } 
 
+    @Operation(summary = "Deposit the amount in the account")
+    @ApiResponse(responseCode = "200", description = "amount deposited")
     @PostMapping("/{id}/deposit")
     public ResponseEntity<AccountDto> deposit(@PathVariable Long id, @RequestBody Map<String, Double> request){
         Double amount = request.get("amount");
@@ -54,6 +56,8 @@ public class AccountController {
         return ResponseEntity.ok(accountDto);
     } 
 
+    @Operation(summary = "Withdraw the amount in the account")
+    @ApiResponse(responseCode = "200", description = "amount deducted")
     @PostMapping("/{id}/withdraw")
     public ResponseEntity<AccountDto> withdraw(@PathVariable Long id, @RequestBody Map<String, Double> request){
         Double amount = request.get("amount");
@@ -61,12 +65,19 @@ public class AccountController {
         return ResponseEntity.ok(accountDto);
     } 
 
+    @Operation(summary = "details of all the account")
+    @ApiResponse(responseCode = "200", description = "all accounts retreived")
     @GetMapping()
     public ResponseEntity<List<AccountDto>> getAllAccounts(){
         List<AccountDto> accounts = accountService.getAllAccounts();
         return ResponseEntity.ok(accounts);
     } 
 
+    @Operation(summary = "delete the existing account")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "account deleted"),
+        @ApiResponse(responseCode = "400", description = "account not found")
+    }) 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteAccount(@PathVariable Long id){
         accountService.deleteAccount(id);
